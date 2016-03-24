@@ -15,6 +15,8 @@
 , alsaLib
 # uhd: the Ettus USRP Hardware Driver Interface
 , uhd
+# libbladeRF: bladeRF hardware interface
+, libbladeRF
 # gr-video-sdl: PAL and NTSC display
 , SDL
 , libusb1, orc, pyopengl
@@ -32,7 +34,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     cmake pkgconfig git boost cppunit fftw python swig2 orc lxml qt4
-    qwt alsaLib SDL libusb1 uhd gsl makeWrapper
+    qwt alsaLib SDL libusb1 uhd libbladeRF gsl makeWrapper
   ];
 
   propagatedBuildInputs = [
