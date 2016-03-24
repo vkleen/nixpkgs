@@ -2,14 +2,14 @@
 , libusb1, udev }:
 
 stdenv.mkDerivation rec {
-  version = "1.4.0";
+  version = "1.5.1";
   name = "libbladeRF-v${version}";
 
   src = fetchFromGitHub {
     owner = "Nuand";
     repo = "bladeRF";
     rev = "libbladeRF_v${version}";
-    sha256 = "1y00hqsmqaix4dql8mb75zx87zvn8b483yxv53x9qyjspksbs60c";
+    sha256 = "04b6n4lyp6xch6yyvjmfhnaczgfgvrwi8vqfn30akpfgc8kqq895";
   };
 
   buildInputs = [ pkgconfig cmake git doxygen help2man tecla libusb1 udev ];
