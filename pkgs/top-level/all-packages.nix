@@ -16451,6 +16451,8 @@ let
 
   mg = callPackage ../applications/editors/mg { };
 
+  libspnav = callPackage ../development/libraries/libspnav { };
+
 }; # self_ =
 
 
