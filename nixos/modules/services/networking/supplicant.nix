@@ -39,8 +39,6 @@ let
         bindsTo = deps;
         after = deps;
         before = [ "network.target" ];
-        # Receive restart event after resume
-        partOf = [ "post-resume.target" ];
 
         path = [ pkgs.coreutils ];
 
@@ -65,6 +63,9 @@ let
         serviceConfig.ExecStart = "${pkgs.wpa_supplicant}/bin/wpa_supplicant -s ${driverArg} ${confFileArg} -I${extraConfFile} ${bridgeArg} ${suppl.extraCmdArgs} ${if (iface=="WLAN"||iface=="LAN") then "-i%I" else (if (iface=="DBUS") then "-u" else ifaceArg)}";
 
       };
+  supplicantRestartCmd = iface: ''
+    ${config.systemd.package}/bin/systemctl try-restart ${serviceName iface}
+  '';
 
 
 in
@@ -226,6 +227,7 @@ in
     services.dbus.packages = [ pkgs.wpa_supplicant ];
 
     systemd.services = mapAttrs' (n: v: nameValuePair (serviceName n) (supplicantService n v)) cfg;
+    powerManagement.resumeCommands = concatMapStrings supplicantRestartCmd (attrNames cfg);
 
     services.udev.packages = [
       (pkgs.writeTextFile {
