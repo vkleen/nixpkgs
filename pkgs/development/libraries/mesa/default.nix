@@ -26,26 +26,30 @@
 with stdenv.lib;
 
 if ! elem stdenv.hostPlatform.system platforms.mesaPlatforms then
-  throw "unsupported platform for Mesa"
+  throw "${stdenv.hostPlatform.system}: unsupported platform for Mesa"
 else
 
 let
-  defaultGalliumDrivers =
+  pciePlatform = !stdenv.isAarch32 && ! stdenv.isAarch64;
+  defaultGalliumDrivers = with stdenv;
     optionals (elem "drm" eglPlatforms)
-    (if stdenv.isAarch32
-    then ["virgl" "nouveau" "freedreno" "vc4" "etnaviv" "imx"]
-    else if stdenv.isAarch64
-    then ["virgl" "nouveau" "vc4" ]
-    else ["virgl" "svga" "i915" "r300" "r600" "radeonsi" "nouveau"]);
-  defaultDriDrivers =
+    (  [ "virgl" ]
+    ++ lib.optionals pciePlatform [ "r300" "r600" "radeonsi" ]
+    ++ lib.optionals (pciePlatform || isAarch32 || isAarch64) [ "nouveau" ]
+    ++ lib.optionals (isi686 || isx86_64) [ "i915" "svga" ]
+    ++ lib.optionals (isAarch32 || isAarch64) [ "vc4" ]
+    ++ lib.optionals isAarch64 [ "freedreno" "etnaviv" "imx" ] );
+  defaultDriDrivers = with stdenv;
     optionals (elem "drm" eglPlatforms)
-    (if (stdenv.isAarch32 || stdenv.isAarch64)
-    then ["nouveau"]
-    else ["i915" "i965" "nouveau" "radeon" "r200"]);
-  defaultVulkanDrivers =
-    optionals stdenv.isLinux (if (stdenv.isAarch32 || stdenv.isAarch64)
-    then []
-    else ["intel"] ++ lib.optional enableRadv "radeon");
+    (  [ ]
+    ++ lib.optionals pciePlatform [ "radeon" "r200" ]
+    ++ lib.optionals (pciePlatform || isAarch32 || isAarch64) [ "nouveau" ]
+    ++ lib.optionals (isi686 || isx86_64) [ "i915" "i965" ]);
+
+  defaultVulkanDrivers = with stdenv;
+    optionals isLinux (
+         optional (isi686 || isx86_64) "intel"
+      ++ optional enableRadv "radeon");
 in
 
 let gallium_ = galliumDrivers; dri_ = driDrivers; vulkan_ = vulkanDrivers; in
