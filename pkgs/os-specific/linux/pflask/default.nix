@@ -2,12 +2,12 @@
 
 stdenv.mkDerivation rec {
   name = "pflask-${version}";
-  version = "git-2015-12-17";
-  rev = "599418bb6453eaa0ccab493f9411f13726c1a636";
+  version = "git-2018-09-14";
+  rev = "9ac31ffe2ed29453218aac89ae992abbd6e7cc69";
 
   src = fetchurl {
     url = "https://github.com/ghedo/pflask/archive/${rev}.tar.gz";
-    sha256 = "2545fca37f9da484b46b6fb5e3a9bbba6526a9725189fe4af5227ef6e6fca440";
+    sha256 = "1hqn4sjpclkmnr8yl8pgarw61k96rg7vb8gcqpm2894206b3yjvm";
   };
 
   nativeBuildInputs = [ wafHook ];
