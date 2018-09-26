@@ -70,13 +70,14 @@
       aarch64-linux = import ./bootstrap-files/aarch64.nix;
       mipsel-linux = import ./bootstrap-files/loongson2f.nix;
       mips64el-linux = import ./bootstrap-files/mips64el.nix;
-      powerpc64le-linux = import ./bootstrap-files/powerpc64le.nix;
+      powerpc64le-linux = import ./bootstrap-files/ppc64le.nix;
       riscv64-linux = import ./bootstrap-files/riscv64.nix;
     };
     musl = {
       aarch64-linux = import ./bootstrap-files/aarch64-musl.nix;
       armv6l-linux  = import ./bootstrap-files/armv6l-musl.nix;
       x86_64-linux  = import ./bootstrap-files/x86_64-musl.nix;
+      powerpc64le-linux = import ./bootstrap-files/ppc64le-musl.nix;
     };
   };
 
