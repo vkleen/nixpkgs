@@ -148,6 +148,18 @@ in rec {
     };
   }) // { perl-bindings = nix1; };
 
+  nix2_0_4 = (common rec {
+    name = "nix-2.0.4";
+    src = fetchurl {
+      url = "http://nixos.org/releases/nix/${name}/${name}.tar.xz";
+      sha256 = "0ss9svxlh1pvrdmnqjvjyqjmbqmrdbyfarvbb14i9d4bggzl0r8n";
+    };
+  }) // { perl-bindings = perl-bindings {
+    nix = nix2_0_4;
+    needsBoost = true;
+    fromGit = true;
+  }; };
+
   nixStable = (common rec {
     name = "nix-2.1.3";
     src = fetchurl {

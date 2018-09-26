@@ -22433,6 +22433,7 @@ in
       })
     nix
     nix1
+    nix2_0_4
     nixStable
     nixUnstable;
 
