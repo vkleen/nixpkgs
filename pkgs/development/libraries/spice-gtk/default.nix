@@ -37,6 +37,7 @@
 , vala
 , wayland-protocols
 , zlib
+, libkrb5
 , withPolkit ? stdenv.isLinux
 }:
 
@@ -101,6 +102,8 @@ stdenv.mkDerivation rec {
     gst_all_1.gst-plugins-base
     gst_all_1.gst-plugins-good
   ];
+
+  propagatedNativeBuildInputs = [ libkrb5 ];
 
   buildInputs = [
     cyrus_sasl
