@@ -22,6 +22,7 @@
 , libopus
 , gst_all_1
 , orc
+, libkrb5
 }:
 
 stdenv.mkDerivation rec {
@@ -67,6 +68,7 @@ stdenv.mkDerivation rec {
     pixman
     python3.pkgs.pyparsing
     zlib
+    libkrb5
   ];
 
   NIX_CFLAGS_COMPILE = "-fno-stack-protector";
