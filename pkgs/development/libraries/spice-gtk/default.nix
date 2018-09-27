@@ -1,6 +1,7 @@
 { stdenv, fetchurl, pkgconfig, spice-protocol, gettext, celt_0_5_1
 , openssl, libpulseaudio, pixman, gobject-introspection, libjpeg_turbo, zlib
 , cyrus_sasl, python2Packages, autoreconfHook, usbredir, libsoup
+, libkrb5
 , withPolkit ? true, polkit, acl, usbutils
 , vala, gtk3, epoxy, libdrm, gst_all_1, phodav, opusfile }:
 
@@ -51,6 +52,7 @@ in stdenv.mkDerivation rec {
   ] ++ optionals withPolkit [ polkit acl usbutils ] ;
 
   nativeBuildInputs = [ pkgconfig gettext libsoup autoreconfHook vala gobject-introspection ];
+  propagatedNativeBuildInputs = [ libkrb5 ];
 
   PKG_CONFIG_POLKIT_GOBJECT_1_POLICYDIR = "${placeholder "out"}/share/polkit-1/actions";
 
