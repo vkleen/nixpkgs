@@ -23,6 +23,7 @@
 , gst_all_1
 , orc
 , gdk-pixbuf
+, libkrb5
 }:
 
 let
@@ -87,6 +88,7 @@ stdenv.mkDerivation rec {
     python3.pkgs.pyparsing
     spice-protocol
     zlib
+    libkrb5
   ] ++ lib.optionals stdenv.isLinux [
     alsa-lib
   ] ++ lib.optionals stdenv.isDarwin [
