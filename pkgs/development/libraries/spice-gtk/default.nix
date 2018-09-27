@@ -31,6 +31,7 @@
 , usbutils
 , vala
 , zlib
+, libkrb5
 , withPolkit ? true
 }:
 
@@ -91,6 +92,8 @@ stdenv.mkDerivation rec {
   propagatedBuildInputs = [
     gst_all_1.gst-plugins-base gst_all_1.gst-plugins-good
   ];
+
+  propagatedNativeBuildInputs = [ libkrb5 ];
 
   buildInputs = [
     cyrus_sasl
