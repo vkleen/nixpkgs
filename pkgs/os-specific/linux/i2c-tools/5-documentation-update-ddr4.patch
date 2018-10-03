@@ -1,0 +1,74 @@
+The EEPROMs used to store SPD data on DDR4 SDRAM modules have their
+own kernel driver: ee1004.
+---
+ eeprom/decode-dimms   |   10 +++++++---
+ eeprom/decode-dimms.1 |    7 ++++---
+ 2 files changed, 11 insertions(+), 6 deletions(-)
+
+--- i2c-tools.orig/eeprom/decode-dimms	2017-11-17 11:27:11.401380668 +0100
++++ i2c-tools/eeprom/decode-dimms	2017-11-17 11:28:32.262363769 +0100
+@@ -5,7 +5,7 @@
+ # Copyright 1998, 1999 Philip Edelbrock <phil@netroedge.com>
+ # modified by Christian Zuckschwerdt <zany@triq.net>
+ # modified by Burkart Lingner <burkart@bollchen.de>
+-# Copyright (C) 2005-2013  Jean Delvare <jdelvare@suse.de>
++# Copyright (C) 2005-2017  Jean Delvare <jdelvare@suse.de>
+ #
+ #    This program is free software; you can redistribute it and/or modify
+ #    it under the terms of the GNU General Public License as published by
+@@ -2410,7 +2410,9 @@ sub get_dimm_list
+ 	my (@dirs, $dir, $opened, $file, @files);
+ 
+ 	if ($use_sysfs) {
+-		@dirs = ('/sys/bus/i2c/drivers/eeprom', '/sys/bus/i2c/drivers/at24');
++		@dirs = ('/sys/bus/i2c/drivers/eeprom',
++			 '/sys/bus/i2c/drivers/at24',
++			 '/sys/bus/i2c/drivers/ee1004');	# DDR4
+ 	} else {
+ 		@dirs = ('/proc/sys/dev/sensors');
+ 	}
+@@ -2428,7 +2430,9 @@ sub get_dimm_list
+ 				# or spd (driver at24)
+ 				my $attr = sysfs_device_attribute("$dir/$file", "name");
+ 				next unless defined $attr &&
+-					    ($attr eq "eeprom" || $attr eq "spd");
++					    ($attr eq "eeprom" ||
++					     $attr eq "spd" ||
++					     $attr eq "ee1004");	# DDR4
+ 			} else {
+ 				next unless $file =~ /^eeprom-/;
+ 			}
+--- i2c-tools.orig/eeprom/decode-dimms.1	2017-11-17 11:21:42.505378009 +0100
++++ i2c-tools/eeprom/decode-dimms.1	2017-11-17 11:28:32.262363769 +0100
+@@ -1,6 +1,7 @@
+ .\"
+ .\"  decode-dimms.1 - manpage for the i2c-tools/decode-dimms utility
+ .\"  Copyright (C) 2013  Jaromir Capik
++.\"  Copyright (C) 2017  Jean Delvare
+ .\"
+ .\"  This program is free software; you can redistribute it and/or modify
+ .\"  it under the terms of the GNU General Public License as published by
+@@ -16,7 +17,7 @@
+ .\"  with this program; if not, write to the Free Software Foundation, Inc.,
+ .\"  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ .\"
+-.TH decode-dimms 1 "Oct 2013" "i2c-tools" "User Commands"
++.TH decode-dimms 1 "Nov 2017" "i2c-tools" "User Commands"
+ .SH NAME
+ decode-dimms \- decode the information found in memory module SPD EEPROMs
+ .SH SYNOPSIS
+@@ -31,8 +32,8 @@ The purpose of the
+ .B decode-dimms
+ tool is to decode the information found in memory module SPD EEPROMs.
+ The SPD data is read either from the running system or dump files.
+-In the former case, the tool requires either the eeprom kernel module
+-or the at24 kernel module to be loaded.
++In the former case, the tool requires a kernel module to be loaded:
++eeprom, at24 or ee1004 (for DDR4 SDRAM.)
+ .SH PARAMETERS
+ .TP
+ .B \-f, --format
+
+-- 
+Jean Delvare
+SUSE L3 Support

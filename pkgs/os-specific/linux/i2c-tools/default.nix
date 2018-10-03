@@ -11,6 +11,15 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ perl ];
 
+  patches = [
+    ./1-preliminary-ddr4.patch
+    ./2-size-and-timings-ddr4.patch
+    ./3-decode-misc-ddr4.patch
+    ./4-physical-characteristics-ddr4.patch
+    ./5-documentation-update-ddr4.patch
+    ./6-crc-ddr4.patch
+  ];
+
   postPatch = ''
     substituteInPlace eeprom/decode-edid --replace "/usr/sbin/parse-edid" "${read-edid}/bin/parse-edid"
     substituteInPlace stub/i2c-stub-from-dump --replace "/sbin/" ""
