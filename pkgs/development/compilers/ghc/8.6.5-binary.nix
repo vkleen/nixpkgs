@@ -10,7 +10,7 @@ assert stdenv.targetPlatform == stdenv.hostPlatform;
 let
   useLLVM = !stdenv.targetPlatform.isx86;
 
-  useNcurses6 = stdenv.hostPlatform.system == "x86_64-linux";
+  useNcurses6 = stdenv.hostPlatform.system == "x86_64-linux" || stdenv.hostPlatform.isPower;
 
   ourNcurses = if useNcurses6 then ncurses6 else ncurses5;
 
@@ -52,6 +52,10 @@ stdenv.mkDerivation rec {
     aarch64-linux = {
       url = "http://haskell.org/ghc/dist/${version}/ghc-${version}-aarch64-ubuntu18.04-linux.tar.xz";
       sha256 = "11n7l2a36i5vxzzp85la2555q4m34l747g0pnmd81cp46y85hlhq";
+    };
+    powerpc64le-linux = {
+      url = "http://haskell.org/ghc/dist/${version}/ghc-${version}-powerpc64le-fedora29-linux.tar.xz";
+      sha256 = "1kjs4k7fg6icnisxx3zsfrprfdp4dn8cw2i21ym2ib6mscjsqr5m";
     };
     x86_64-darwin = {
       url = "http://haskell.org/ghc/dist/${version}/ghc-${version}-x86_64-apple-darwin.tar.xz";
@@ -172,5 +176,5 @@ stdenv.mkDerivation rec {
   };
 
   meta.license = lib.licenses.bsd3;
-  meta.platforms = ["x86_64-linux" "aarch64-linux" "i686-linux" "x86_64-darwin"];
+  meta.platforms = ["x86_64-linux" "aarch64-linux" "i686-linux" "x86_64-darwin" "powerpc64le-linux"];
 }
