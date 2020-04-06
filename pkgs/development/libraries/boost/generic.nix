@@ -242,6 +242,12 @@ stdenv.mkDerivation {
   ] ++ optional (toolset != null) "--with-toolset=${toolset}"
     ++ [ (if enableIcu then "--with-icu=${icu.dev}" else "--without-icu") ];
 
+  configurePhase = ''
+    runHook preConfigure
+    CXX=g++ $configureScript $configureFlags
+    runHook postConfigure
+  '';
+
   buildPhase = ''
     runHook preBuild
     b2 ${b2Args}
