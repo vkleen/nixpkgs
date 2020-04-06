@@ -177,6 +177,12 @@ stdenv.mkDerivation {
     ++ [ (if stdenv.hostPlatform == stdenv.buildPlatform then "--with-icu=${icu.dev}" else "--without-icu") ]
     ++ optional (toolset != null) "--with-toolset=${toolset}";
 
+  configurePhase = ''
+    runHook preConfigure
+    CXX=g++ $configureScript $configureFlags
+    runHook postConfigure
+  '';
+
   buildPhase = ''
     runHook preBuild
     ./b2 ${b2Args}
