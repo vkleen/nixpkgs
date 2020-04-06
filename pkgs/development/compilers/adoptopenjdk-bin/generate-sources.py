@@ -15,12 +15,13 @@ arch_to_nixos = {
     "x64": ("x86_64",),
     "aarch64": ("aarch64",),
     "arm": ("armv6l", "armv7l"),
+    "ppc64le": ("powerpc64le",),
 }
 
 def get_sha256(url):
     resp = requests.get(url)
     if resp.status_code != 200:
-        print("error: could not fetch checksum from url {}: code {}".format(url, resp.code), file=sys.stderr)
+        print("error: could not fetch checksum from url {}: code {}".format(url, resp.status_code), file=sys.stderr)
         sys.exit(1)
     return resp.text.strip().split(" ")[0]
 
@@ -57,7 +58,7 @@ out = {}
 for release in releases:
     resp = requests.get("https://api.adoptopenjdk.net/v2/latestAssets/releases/" + release)
     if resp.status_code != 200:
-        print("error: could not fetch data for release {} (code {})".format(release, resp.code), file=sys.stderr)
+        print("error: could not fetch data for release {} (code {})".format(release, resp.status_code), file=sys.stderr)
         sys.exit(1)
     out[release] = generate_sources(release, resp.json())
 
