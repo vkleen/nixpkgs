@@ -168,6 +168,41 @@ let
         "38b6a9a8e5901766613879b6976f207aa163588a"
         "1lvxbd7rl6hz5j6kh6q83yb6vd9g7anlqbai8g1w1bp6wdpgwvp9"
       )
+    ] ++ optionals (stdenv.targetPlatform.isPower) [
+      ./patches/power9/0001-Add-ppc64-target-to-libaom.patch
+      ./patches/power9/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch
+      ./patches/power9/0001-Add-support-for-ppc64.patch
+      ./patches/power9/0001-Force-baseline-POWER8-AltiVec-VSX-CPU-features-when-.patch
+      ./patches/power9/0001-Implement-ppc64-support-on-linux.patch
+      ./patches/power9/0001-Implement-support-for-PPC64-on-Linux.patch
+      ./patches/power9/0001-linux-seccomp-bpf-ppc64-glibc-workaround-in-SIGSYS-h.patch
+      ./patches/power9/0001-pdfium-allocator-Use-64k-page-sizes-on-ppc64.patch
+      ./patches/power9/0001-Properly-detect-little-endian-PPC64-systems.patch
+      ./patches/power9/0001-Reenable-VSX-in-libpng.patch
+      ./patches/power9/0001-sandbox-Enable-seccomp_bpf-for-ppc64.patch
+      ./patches/power9/0001-sandbox-linux-bpf_dsl-Update-syscall-ranges-for-ppc6.patch
+      ./patches/power9/0001-sandbox-linux-Implement-partial-support-for-ppc64-sy.patch
+      ./patches/power9/0001-sandbox-linux-Update-IsSyscallAllowed-in-broker_proc.patch
+      ./patches/power9/0001-sandbox-linux-Update-syscall-helpers-lists-for-ppc64.patch
+      ./patches/power9/0001-services-service_manager-sandbox-linux-Fix-TCGETS-de.patch
+      ./patches/power9/0001-third_party-angle-Include-missing-header-cstddef-in-.patch
+      ./patches/power9/0001-third_party-boringssl-Properly-detect-ppc64le-in-BUI.patch
+      ./patches/power9/0001-third_party-libvpx-Properly-generate-gni-on-ppc64.patch
+      ./patches/power9/0001-third_party-lss-Don-t-look-for-mmap2-on-ppc64.patch
+      ./patches/power9/0001-third_party-pffft-Include-altivec.h-on-ppc64-with-SI.patch
+      ./patches/power9/0001-xf86drm.c-Fix-build-on-newer-glibc.patch
+      ./patches/power9/0002-Include-cstddef-to-fix-build.patch
+      ./patches/power9/0002-sandbox-linux-bpf_dsl-Modify-seccomp_macros-to-add-s.patch
+      ./patches/power9/0002-third_party-closure_compiler-Remove-useless-JVM-flag.patch
+      ./patches/power9/0003-sandbox-linux-system_headers-Update-linux-seccomp-he.patch
+      ./patches/power9/0004-sandbox-linux-system_headers-Update-linux-signal-hea.patch
+      ./patches/power9/0005-sandbox-linux-seccomp-bpf-Add-ppc64-syscall-stub.patch
+      ./patches/power9/0005-sandbox-linux-update-unit-test-for-ppc64.patch
+      ./patches/power9/Binutils-download.py-PPC.patch
+      ./patches/power9/HACK-third_party-libvpx-use-generic-gnu.patch
+      ./patches/power9/Modules-desktop_capture-differ_block.cc-PPC.patch
+      ./patches/power9/Rtc_base-system-arch.h-PPC.patch
+      ./patches/power9/Sandbox-linux-services-credentials.cc-PPC.patch
     ];
 
     postPatch = ''
@@ -248,6 +283,7 @@ let
       # ninja: error: '../../native_client/toolchain/linux_x86/pnacl_newlib/bin/x86_64-nacl-objcopy',
       # needed by 'nacl_irt_x86_64.nexe', missing and no known rule to make it
       enable_nacl = false;
+      "${if stdenv.targetPlatform.isPower then "enable_dav1d_decoder" else null}" = false;
       # Enabling the Widevine component here doesn't affect whether we can
       # redistribute the chromium package; the Widevine component is either
       # added later in the wrapped -wv build or downloaded from Google.
@@ -307,6 +343,12 @@ let
 
     configurePhase = ''
       runHook preConfigure
+    '' + optionalString stdenv.targetPlatform.isPower ''
+      cd third_party/libvpx
+      mkdir -p source/config/linux/ppc64
+      PATH=$PATH:${gn}/bin/ ./generate_gni.sh
+      cd ../..
+    '' + ''
 
       # This is to ensure expansion of $out.
       libExecPath="${libExecPath}"
