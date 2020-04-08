@@ -10,6 +10,10 @@ stdenv.mkDerivation rec {
 
   buildInputs = lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [ ApplicationServices ]);
 
+  patches = [
+    ./webrtc-audio-processing-ppc64le.patch
+  ];
+
   patchPhase = lib.optionalString stdenv.hostPlatform.isMusl ''
     substituteInPlace webrtc/base/checks.cc --replace 'defined(__UCLIBC__)' 1
   '';
