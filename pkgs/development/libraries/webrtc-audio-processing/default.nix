@@ -18,6 +18,10 @@ stdenv.mkDerivation rec {
     meson
     ninja
   ];
+  patches = [
+    ./enable-riscv.patch
+    ./webrtc-audio-processing-ppc64le.patch
+  ];
 
   buildInputs = [
     abseil-cpp_202111
