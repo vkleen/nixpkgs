@@ -7,7 +7,7 @@
 , xorg, libXcursor, libXScrnSaver, libXrandr, libXtst
 , fontconfig, freetype, harfbuzz, icu, dbus, libdrm
 , zlib, minizip, libjpeg, libpng, libtiff, libwebp, libopus
-, jsoncpp, protobuf, libvpx, srtp, snappy, nss, libevent
+, jsoncpp, protobuf, libvpx_1_8, srtp, snappy, nss, libevent
 , alsaLib
 , libcap
 , pciutils
@@ -48,6 +48,11 @@ qtModule {
   # ninja builds some components with -Wno-format,
   # which cannot be set at the same time as -Wformat-security
   hardeningDisable = [ "format" ];
+
+  patches = optionals (stdenv.targetPlatform.isPower) [
+    ./patches/Qtwebengine.patch
+    ./patches/Webengine-chromium.patch
+  ];
 
   postPatch =
     ''
@@ -142,6 +147,8 @@ qtModule {
 
   qmakeFlags = if stdenv.hostPlatform.isAarch32 || stdenv.hostPlatform.isAarch64
     then [ "--" "-system-ffmpeg" ] ++ optional enableProprietaryCodecs "-proprietary-codecs"
+    else if stdenv.hostPlatform.isPower
+    then [ "--" "-system-ffmpeg" "-feature-webengine-system-libvpx" ] ++ optional enableProprietaryCodecs "-proprietary-codecs"
     else optional enableProprietaryCodecs "-- -proprietary-codecs";
 
   propagatedBuildInputs = [
@@ -149,7 +156,7 @@ qtModule {
     libjpeg libpng libtiff libwebp
 
     # Video formats
-    srtp libvpx
+    srtp libvpx_1_8.dev
 
     # Audio formats
     libopus
@@ -158,7 +165,7 @@ qtModule {
     harfbuzz icu
 
     libevent
-  ] ++ optionals (stdenv.hostPlatform.isAarch32 || stdenv.hostPlatform.isAarch64) [
+  ] ++ optionals (stdenv.hostPlatform.isAarch32 || stdenv.hostPlatform.isAarch64 || stdenv.hostPlatform.isPower) [
     ffmpeg_3
   ] ++ optionals (!stdenv.isDarwin) [
     dbus zlib minizip snappy nss protobuf jsoncpp
