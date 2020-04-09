@@ -7,7 +7,7 @@
 , xorg, libXcursor, libXScrnSaver, libXrandr, libXtst
 , fontconfig, freetype, harfbuzz, icu, dbus, libdrm
 , zlib, minizip, libjpeg, libpng, libtiff, libwebp, libopus
-, jsoncpp, protobuf, libvpx, srtp, snappy, nss, libevent
+, jsoncpp, protobuf, libvpx_1_8, srtp, snappy, nss, libevent
 , alsa-lib
 , libcap
 , pciutils
@@ -105,6 +105,11 @@ qtModule {
     --replace "audit_token_to_pid(msg.trailer.msgh_audit)" "msg.trailer.msgh_audit.val[5]"
   '')) + postPatch;
 
+  patches = lib.optionals (stdenv.targetPlatform.isPower) [
+    ./patches/Qtwebengine.patch
+    ./patches/Webengine-chromium.patch
+  ];
+
   NIX_CFLAGS_COMPILE = lib.optionals stdenv.cc.isGNU [
     # with gcc8, -Wclass-memaccess became part of -Wall and this exceeds the logging limit
     "-Wno-class-memaccess"
@@ -140,14 +145,15 @@ qtModule {
 
   qmakeFlags = [ "--" "-system-ffmpeg" ]
     ++ lib.optional (pipewireSupport && (lib.versionAtLeast qtCompatVersion "5.15")) "-webengine-webrtc-pipewire"
-    ++ lib.optional enableProprietaryCodecs "-proprietary-codecs";
+    ++ lib.optional enableProprietaryCodecs "-proprietary-codecs"
+    ++ lib.optional stdenv.hostPlatform.isPower "-feature-webengine-system-libvpx";
 
   propagatedBuildInputs = [
     # Image formats
     libjpeg libpng libtiff libwebp
 
     # Video formats
-    srtp libvpx
+    srtp libvpx_1_8.dev
 
     # Audio formats
     libopus

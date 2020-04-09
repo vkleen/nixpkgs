@@ -1,0 +1,22 @@
+diff -Naur qtwebengine-everywhere-src-5.12.7.orig/mkspecs/features/functions.prf qtwebengine-everywhere-src-5.12.7/mkspecs/features/functions.prf
+--- qtwebengine-everywhere-src-5.12.7.orig/mkspecs/features/functions.prf	2020-01-28 04:08:06.000000000 +0000
++++ qtwebengine-everywhere-src-5.12.7/mkspecs/features/functions.prf	2020-04-08 19:48:51.360899709 +0000
+@@ -85,6 +85,7 @@
+     contains(qtArch, "arm64"): return(arm64)
+     contains(qtArch, "mips"): return(mipsel)
+     contains(qtArch, "mips64"): return(mips64el)
++    contains(qtArch, "power64"): return(ppc64)
+     return(unknown)
+ }
+ 
+diff -Naur qtwebengine-everywhere-src-5.12.7.orig/mkspecs/features/platform.prf qtwebengine-everywhere-src-5.12.7/mkspecs/features/platform.prf
+--- qtwebengine-everywhere-src-5.12.7.orig/mkspecs/features/platform.prf	2020-01-28 04:08:06.000000000 +0000
++++ qtwebengine-everywhere-src-5.12.7/mkspecs/features/platform.prf	2020-04-08 19:48:51.360899709 +0000
+@@ -84,6 +84,7 @@
+     contains(QT_ARCH, "arm")|contains(QT_ARCH, "arm64"): return(true)
+     contains(QT_ARCH, "mips"): return(true)
+ #     contains(QT_ARCH, "mips64"): return(true)
++    contains(QT_ARCH, "power64"): return(true)
+ 
+     skipBuild("QtWebEngine can only be built for x86, x86-64, ARM, Aarch64, and MIPSel architectures.")
+     return(false)
