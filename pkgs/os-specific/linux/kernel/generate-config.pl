@@ -100,8 +100,14 @@ sub runConfig {
             }
 
             # Some questions lack the option name ("bla bla [Y/n/m/...] ").
-            elsif ($line =~ /(.*) \[(.*)\] ###$/) {
-                print OUT "\n";
+            elsif ($line =~ /(.*) \[(.*)\].*###$/) {
+                my $question = $1; my $alts = $2;
+                my $answer = "";
+                $answer = "m" if $autoModules && $alts =~ /\/m/ && !($preferBuiltin && $alts =~ /Y/);
+                print STDERR "QUESTION: $question, ALTS: $alts, ANSWER: $answer\n" if $debug;
+                print OUT "$answer\n";
+                die "repeated question: $question" if $prevQuestion && $prevQuestion eq $question;
+                $prevQuestion = $question;
             }
 
             else {
