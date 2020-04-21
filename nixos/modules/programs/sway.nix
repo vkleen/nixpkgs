@@ -108,6 +108,13 @@ in {
       '';
     };
 
+    swayPackage = mkOption {
+      type = types.package;
+      default = swayPackage;
+      description = ''
+        Final sway package; overrides all other options if set explicitly
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -120,6 +127,7 @@ in {
         '';
       }
     ];
+    programs.sway.swayPackage = swayPackage;
     environment = {
       systemPackages = [ swayPackage ] ++ cfg.extraPackages;
       # Needed for the default wallpaper:
@@ -146,4 +154,5 @@ in {
   };
 
   meta.maintainers = with lib.maintainers; [ primeos colemickens ];
+  meta.buildDocsInSandbox = false;
 }
