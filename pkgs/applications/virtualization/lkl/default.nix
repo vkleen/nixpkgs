@@ -3,8 +3,8 @@
 
 stdenv.mkDerivation rec {
   pname = "lkl";
-  version = "2019-10-04";
-  rev  = "06ca3ddb74dc5b84fa54fa1746737f2df502e047";
+  version = "2019-15-10";
+  rev = "c459324212a3ecd747da4c2f9c7e8f5fd8a5ee8a";
 
   outputs = [ "dev" "lib" "out" ];
 
@@ -16,7 +16,7 @@ stdenv.mkDerivation rec {
     inherit rev;
     owner  = "lkl";
     repo   = "linux";
-    sha256 = "0qjp0r338bwgrqdsvy5mkdh7ryas23m47yvxfwdknfyl0k3ylq62";
+    sha256 = "1g5h4nw00kid31m4c6kh7fsqcmsfl8crm79216apqnhx984c6qpx";
   };
 
   # Fix a /usr/bin/env reference in here that breaks sandboxed builds
@@ -61,7 +61,7 @@ stdenv.mkDerivation rec {
       overhead
     '';
     homepage    = "https://github.com/lkl/linux/";
-    platforms   = [ "x86_64-linux" "aarch64-linux" "armv7l-linux" "armv6l-linux" ]; # Darwin probably works too but I haven't tested it
+    platforms   = [ "x86_64-linux" "aarch64-linux" "armv7l-linux" "armv6l-linux" "powerpc64le-linux" ]; # Darwin probably works too but I haven't tested it
     license     = licenses.gpl2;
     maintainers = with maintainers; [ copumpkin ];
   };
