@@ -140,7 +140,8 @@ let
         isDarwin isLinux isSunOS isCygwin isFreeBSD isOpenBSD
         isi686 isx86_32 isx86_64
         is32bit is64bit
-        isAarch32 isAarch64 isMips isBigEndian;
+        isAarch32 isAarch64 isMips isBigEndian
+        isPower isPower9;
 
       # Override `system` so that packages can get the system of the host
       # platform through `stdenv.system`. `system` is originally set to the

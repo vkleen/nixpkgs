@@ -274,7 +274,7 @@ in rec {
               else if isAarch64 then "aarch64"
               else if isx86_32  then "x86"
               else if isx86_64  then "x86_64"
-              else if isPower && is64bit  then "ppc64"
+              else if isPower9  then "ppc64"
               else platform.parsed.cpu.family + builtins.toString platform.parsed.cpu.bits;
             crossFile = builtins.toFile "cross-file.conf" ''
               [properties]
