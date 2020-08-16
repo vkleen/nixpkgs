@@ -35,6 +35,7 @@
 , qtx11extras
 , qtxmlpatterns
 , scipy
+, numpy
 , shiboken2
 , soqt
 , spaceNavSupport ? stdenv.isLinux
@@ -92,6 +93,7 @@ mkDerivation rec {
     qtwebengine
     qtxmlpatterns
     scipy
+    numpy
     shiboken2
     soqt
     swig
