@@ -23878,6 +23878,7 @@ in
       python
       pyyaml
       scipy
+      numpy
       shiboken2;
   };
 
