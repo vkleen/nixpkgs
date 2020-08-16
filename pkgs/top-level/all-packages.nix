@@ -28821,6 +28821,7 @@ with pkgs;
       python
       pyyaml
       scipy
+      numpy
       shiboken2;
   };
 
