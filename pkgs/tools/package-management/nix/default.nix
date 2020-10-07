@@ -11,7 +11,7 @@ let
 common =
   { lib, stdenv, perl, curl, bzip2, sqlite, openssl ? null, xz
   , bash, coreutils, util-linuxMinimal, gzip, gnutar
-  , pkg-config, boehmgc, libsodium, brotli, boost, editline, nlohmann_json
+  , pkg-config, boehmgc, libsodium, brotli, boost, boost17x, editline, nlohmann_json
   , autoreconfHook, autoconf-archive, bison, flex
   , jq, libarchive, libcpuid
   , lowdown, mdbook
@@ -51,7 +51,7 @@ common =
 
       buildInputs =
         [ curl openssl sqlite xz bzip2 nlohmann_json
-          brotli boost editline
+          brotli boost17x editline
         ]
         ++ lib.optionals stdenv.isDarwin [ Security ]
         ++ lib.optional (stdenv.isLinux || stdenv.isDarwin) libsodium
@@ -87,7 +87,7 @@ common =
         # https://github.com/NixOS/nixpkgs/issues/45462
         lib.optionalString (!enableStatic) ''
           mkdir -p $out/lib
-          cp -pd ${boost}/lib/{libboost_context*,libboost_thread*,libboost_system*} $out/lib
+          cp -pd ${boost17x}/lib/{libboost_context*,libboost_thread*,libboost_system*} $out/lib
           rm -f $out/lib/*.a
           ${lib.optionalString stdenv.isLinux ''
             chmod u+w $out/lib/*.so.*
@@ -175,7 +175,7 @@ common =
           # This is not cross-compile safe, don't have time to fix right now
           # but noting for future travellers.
           nativeBuildInputs =
-            [ perl pkg-config curl nix libsodium boost autoreconfHook autoconf-archive nlohmann_json ];
+            [ perl pkg-config curl nix libsodium boost17x autoreconfHook autoconf-archive nlohmann_json ];
 
           configureFlags =
             [ "--with-dbi=${perl.pkgs.DBI}/${perl.libPrefix}"
