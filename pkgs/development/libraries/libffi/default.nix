@@ -8,7 +8,7 @@
 # cgit) that are needed here should be included directly in Nixpkgs as
 # files.
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (rec {
   name = "libffi-3.3";
 
   src = fetchurl {
@@ -21,9 +21,8 @@ stdenv.mkDerivation rec {
   outputs = [ "out" "dev" "man" "info" ];
 
   configureFlags = [
-    "--with-gcc-arch=generic" # no detection of -march= or -mtune=
     "--enable-pax_emutramp"
-  ];
+  ] ++ (if stdenv.isPower9 then [ "--with-gcc-arch=power9" ] else [ "--with-gcc-arch=generic" ]);
 
   preCheck = ''
     # The tests use -O0 which is not compatible with -D_FORTIFY_SOURCE.
@@ -53,4 +52,6 @@ stdenv.mkDerivation rec {
     maintainers = with maintainers; [ matthewbauer ];
     platforms = platforms.all;
   };
-}
+} // (if ! stdenv.isPower9 then {} else {
+  NIX_CFLAGS_COMPILE = "-mfloat128";
+}))
