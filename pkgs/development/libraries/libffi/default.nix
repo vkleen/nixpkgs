@@ -32,7 +32,6 @@ stdenv.mkDerivation rec {
   configurePlatforms = [ "build" "host" ];
 
   configureFlags = [
-    "--with-gcc-arch=generic" # no detection of -march= or -mtune=
     "--enable-pax_emutramp"
 
     # Causes issues in downstream packages which misuse ffi_closure_alloc
@@ -40,7 +39,7 @@ stdenv.mkDerivation rec {
     # https://gitlab.haskell.org/ghc/ghc/-/merge_requests/6155
     # https://gitlab.gnome.org/GNOME/gobject-introspection/-/merge_requests/283
     "--disable-exec-static-tramp"
-  ];
+  ] ++ (if stdenv.isPower9 then [ "--with-gcc-arch=power9" ] else [ "--with-gcc-arch=generic" ]);
 
   preCheck = ''
     # The tests use -O0 which is not compatible with -D_FORTIFY_SOURCE.
@@ -78,4 +77,6 @@ stdenv.mkDerivation rec {
     maintainers = with maintainers; [ matthewbauer ];
     platforms = platforms.all;
   };
-}
+} // (if ! stdenv.isPower9 then {} else {
+  NIX_CFLAGS_COMPILE = "-mfloat128";
+})
