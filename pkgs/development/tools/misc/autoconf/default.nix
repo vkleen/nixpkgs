@@ -16,6 +16,8 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ m4 perl ];
   buildInputs = [ m4 ];
 
+  configureFlags = lib.optionals stdenv.isPower9 [ "--build=powerpc64le-unknown-linux-gnu" ];
+
   # Work around a known issue in Cygwin.  See
   # http://thread.gmane.org/gmane.comp.sysutils.autoconf.bugs/6822 for
   # details.
