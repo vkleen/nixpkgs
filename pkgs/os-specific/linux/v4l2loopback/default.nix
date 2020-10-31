@@ -1,14 +1,14 @@
 { lib, stdenv, fetchFromGitHub, kernel, kmod }:
 
 stdenv.mkDerivation rec {
-  pname = "v4l2loopback";
-  version = "unstable-2020-04-22-${kernel.version}";
+  name = "v4l2loopback-${version}-${kernel.version}";
+  version = "81b8df79107d1fbf392fdcbaa051bd227a9c94c1";
 
   src = fetchFromGitHub {
     owner = "umlaeute";
     repo = "v4l2loopback";
-    rev = "d26e624b4ead762d34152f9f825b3a51fb92fb9c";
-    sha256 = "sha256-OA45vmuVieoL7J83D3TD5qi3SBsiqi0kiQn4i1K6dVE=";
+    rev = version;
+    hash = "sha256-2Kj3IdbKbeTdSyUdSXTDNeWKF1IvmchciXZpX8e0KtA=";
   };
 
   hardeningDisable = [ "format" "pic" ];
@@ -27,6 +27,11 @@ stdenv.mkDerivation rec {
     "KERNELRELEASE=${kernel.modDirVersion}"
     "KERNEL_DIR=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"
   ];
+
+  postInstall = ''
+    mkdir -p $out/bin
+    install -m0755 utils/v4l2loopback-ctl $out/bin
+  '';
 
   meta = with lib; {
     description = "A kernel module to create V4L2 loopback devices";
