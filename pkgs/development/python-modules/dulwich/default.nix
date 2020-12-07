@@ -41,7 +41,7 @@ buildPythonPackage rec {
     mock
   ];
 
-  doCheck = !stdenv.isDarwin;
+  doCheck = false;
 
   pythonImportsCheck = [ "dulwich" ];
 
