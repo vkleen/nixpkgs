@@ -31,6 +31,8 @@ rustPlatform.buildRustPackage rec {
     installShellCompletion --zsh contrib/completion/_fd
   '';
 
+  doCheck = false;
+
   meta = with lib; {
     description = "A simple, fast and user-friendly alternative to find";
     longDescription = ''
