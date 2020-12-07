@@ -19,7 +19,7 @@ buildPythonPackage rec {
   # Only test dependencies
   checkInputs = [ git glibcLocales gevent geventhttpclient mock fastimport ];
 
-  doCheck = !stdenv.isDarwin;
+  doCheck = false;
 
   meta = with lib; {
     description = "Simple Python implementation of the Git file formats and protocols";
