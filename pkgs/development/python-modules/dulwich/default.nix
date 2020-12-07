@@ -28,7 +28,7 @@ buildPythonPackage rec {
   # Only test dependencies
   checkInputs = [ git glibcLocales gevent geventhttpclient mock fastimport ];
 
-  doCheck = !stdenv.isDarwin;
+  doCheck = false;
 
   pythonImportsCheck = [ "dulwich" ];
 
