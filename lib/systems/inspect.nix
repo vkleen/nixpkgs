@@ -13,6 +13,7 @@ rec {
     isx86_64       = { cpu = { family = "x86"; bits = 64; }; };
     isPower        = { cpu = { family = "power"; }; };
     isPower64      = { cpu = { family = "power"; bits = 64; }; };
+    isPower9       = { cpu = { family = "power"; bits = 64; significantByte = significantBytes.littleEndian; }; };
     # This ABI is the default in NixOS PowerPC64 BE, but not on mainline GCC,
     # so it sometimes causes issues in certain packages that makes the wrong
     # assumption on the used ABI.
