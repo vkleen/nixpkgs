@@ -114,7 +114,9 @@ stdenv.mkDerivation rec {
 
   configureFlags =
     [ "--audio-drv-list=${audio}"
-      "--enable-docs"
+      "--disable-docs"
+      "--sysconfdir=/etc"
+      "--localstatedir=/var"
       "--enable-tools"
       "--enable-guest-agent"
     ]
