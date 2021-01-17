@@ -29,6 +29,7 @@
 , sanitizeThreads ? false
 , with3d ? true
 , withI18n ? true
+, doCheck ? true
 , srcs ? { }
 }:
 
@@ -166,6 +167,7 @@ stdenv.mkDerivation rec {
     inherit wxGTK python wxPython;
     inherit withI18n withOCC withOCE withNgspice withScripting;
     inherit debug sanitizeAddress sanitizeThreads;
+    inherit doCheck;
   };
 
   inherit pname;
