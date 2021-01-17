@@ -30,6 +30,7 @@
 , valgrind
 , with3d ? true
 , withI18n ? true
+, doCheck ? true
 , srcs ? { }
 }:
 
@@ -169,6 +170,7 @@ stdenv.mkDerivation rec {
     inherit (passthru) i18n;
     inherit wxGTK python wxPython;
     inherit debug withI18n withOCC withOCE withNgspice withScripting;
+    inherit doCheck;
   };
 
   inherit pname;
