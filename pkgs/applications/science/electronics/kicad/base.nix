@@ -53,6 +53,8 @@
 , debug
 , sanitizeAddress
 , sanitizeThreads
+  # debug builds fail all but the python test
+, doCheck ? !debug
 }:
 
 assert lib.assertMsg (!(sanitizeAddress && sanitizeThreads))
@@ -168,8 +170,7 @@ stdenv.mkDerivation rec {
   # started becoming necessary halfway into 2022, not sure what changed to break a test...
   preInstallCheck = optionals (withNgspice) [ "export LD_LIBRARY_PATH=${libngspice}/lib" ];
 
-  # debug builds fail all but the python test
-  doInstallCheck = !debug;
+  doInstallCheck = doCheck;
   installCheckTarget = "test";
 
   dontStrip = debug;

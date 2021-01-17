@@ -25,6 +25,7 @@
 , with3d ? true
 , withI18n ? true
 , withPCM ? true # Plugin and Content Manager
+, doCheck ? true
 , srcs ? { }
 }:
 
@@ -120,6 +121,7 @@ stdenv.mkDerivation rec {
     inherit wxGTK python wxPython;
     inherit withOCC withNgspice withScripting withI18n withPCM;
     inherit debug sanitizeAddress sanitizeThreads;
+    inherit doCheck;
   };
 
   inherit pname;
