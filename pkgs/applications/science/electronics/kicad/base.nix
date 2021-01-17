@@ -39,6 +39,7 @@
 , valgrind
 , withI18n
 , gtk3
+, doCheck
 }:
 
 assert lib.asserts.assertMsg (!(withOCE && stdenv.isAarch64)) "OCE fails a test on Aarch64";
@@ -121,7 +122,7 @@ stdenv.mkDerivation rec {
 
   # debug builds fail all but the python test
   # 5.1.x fails the eeschema test
-  doInstallCheck = !debug && !stable;
+  doInstallCheck = doCheck && !debug && !stable;
   installCheckTarget = "test";
 
   dontStrip = debug;
