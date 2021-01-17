@@ -54,6 +54,8 @@
 , debug
 , sanitizeAddress
 , sanitizeThreads
+  # debug builds fail all but the python test
+, doCheck ? !debug
 }:
 
 assert lib.assertMsg (!(sanitizeAddress && sanitizeThreads))
@@ -174,8 +176,7 @@ stdenv.mkDerivation rec {
   ++ optional (withOCC) opencascade-occt
   ++ optional (debug) valgrind;
 
-  # debug builds fail all but the python test
-  doInstallCheck = !(debug);
+  doInstallCheck = doCheck;
   installCheckTarget = "test";
 
   dontStrip = debug;
