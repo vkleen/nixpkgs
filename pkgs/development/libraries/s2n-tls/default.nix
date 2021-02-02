@@ -17,6 +17,8 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DBUILD_SHARED_LIBS=ON"
+  ] ++ lib.optionals stdenv.hostPlatform.isPower9 [
+    "-DS2N_NO_PQ=ON"
   ];
 
   meta = with lib; {
