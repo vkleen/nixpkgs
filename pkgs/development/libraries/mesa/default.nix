@@ -6,9 +6,9 @@
 , libelf, libvdpau
 , libglvnd
 , enableRadv ? true
-, galliumDrivers ? ["auto"]
-, driDrivers ? ["auto"]
-, vulkanDrivers ? ["auto"]
+, galliumDrivers ? if !stdenv.isPower9 then ["auto"] else null
+, driDrivers ? if !stdenv.isPower9 then ["auto"] else null
+, vulkanDrivers ? if !stdenv.isPower9 then ["auto"] else null
 , eglPlatforms ? [ "x11" ] ++ lib.optionals stdenv.isLinux [ "wayland" ]
 , OpenGL, Xplugin
 , withValgrind ? stdenv.hostPlatform.isLinux && !stdenv.hostPlatform.isAarch32, valgrind-light
@@ -30,10 +30,32 @@
 with lib;
 
 let
+  driDrivers' = driDrivers;
+  galliumDrivers' = galliumDrivers;
+  vulkanDrivers' = vulkanDrivers;
+in let
   # Release calendar: https://www.mesa3d.org/release-calendar.html
   # Release frequency: https://www.mesa3d.org/releasing.html#schedule
   version = "21.0.1";
   branch  = versions.major version;
+
+  driDrivers = if driDrivers' == null then (
+    lib.optionals stdenv.isPower9 [
+      "r200" "nouveau"
+    ]
+  ) else driDrivers';
+
+  galliumDrivers = if galliumDrivers' == null then (
+    lib.optionals stdenv.isPower9 [
+      "virgl" "r300" "r600" "radeonsi" "nouveau" "swrast"
+    ]
+  ) else galliumDrivers';
+
+  vulkanDrivers = if vulkanDrivers' == null then (
+    lib.optionals (stdenv.isPower9 && enableRadv) [
+      "amd" "swrast"
+    ]
+  ) else vulkanDrivers';
 in
 
 stdenv.mkDerivation {
