@@ -41,6 +41,8 @@ rustPlatform.buildRustPackage rec {
 
   checkFlags = [ "--skip=pager_more" "--skip=pager_most" ];
 
+  checkPhase = "true";
+
   passthru.tests = { inherit (nixosTests) bat; };
 
   meta = with lib; {
