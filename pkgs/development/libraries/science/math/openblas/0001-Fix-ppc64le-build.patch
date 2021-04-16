@@ -1,0 +1,30 @@
+From 7611aeb034872b121126b3acd7b4f24a20ca8ed6 Mon Sep 17 00:00:00 2001
+From: Viktor Kleen <viktor@kleen.org>
+Date: Fri, 16 Apr 2021 16:38:12 +0000
+Subject: [PATCH] Fix ppc64le build
+
+---
+ param.h | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/param.h b/param.h
+index a35ce69b..dc54f882 100644
+--- a/param.h
++++ b/param.h
+@@ -73,12 +73,10 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #define PARAM_H
+ 
+ #define LONGCAST (BLASLONG)
+-#if defined(__BYTE_ORDER__)
+-#if __GNUC__ < 9
++#if defined(ARCH_POWER)
+ #undef LONGCAST
+ #define LONGCAST
+ #endif
+-#endif
+ 
+ #define SBGEMM_DEFAULT_UNROLL_N 4
+ #define SBGEMM_DEFAULT_UNROLL_M 8
+-- 
+2.30.0
+

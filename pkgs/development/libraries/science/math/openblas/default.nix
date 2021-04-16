@@ -113,25 +113,29 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "openblas";
-  version = "0.3.13";
+  version = "20201604";
 
   outputs = [ "out" "dev" ];
 
   src = fetchFromGitHub {
     owner = "xianyi";
     repo = "OpenBLAS";
-    rev = "v${version}";
-    sha256 = "14jxh0v3jfbw4mfjx4mcz4dd51lyq7pqvh9k8dg94539ypzjr2lj";
+    rev = "b0239a05fdc4ed109e72d7c308e2c65d28d317d7";
+    sha256 = "sha256-c7w6ybmCXSJhnSW4/PTnTLjw8OMuWJDb9LXnr4EFqQQ=";
   };
 
   # apply https://github.com/xianyi/OpenBLAS/pull/3060 to fix a crash on arm
   # remove this when updating to 0.3.14 or newer
+  # patches = [
+  #   (fetchpatch {
+  #     name = "label-get_cpu_ftr-as-volatile.patch";
+  #     url = "https://github.com/xianyi/OpenBLAS/commit/6fe0f1fab9d6a7f46d71d37ebb210fbf56924fbc.diff";
+  #     sha256 = "06gwh73k4sas1ap2fi3jvpifbjkys2vhmnbj4mzrsvj279ljsfdk";
+  #   })
+  # ];
+
   patches = [
-    (fetchpatch {
-      name = "label-get_cpu_ftr-as-volatile.patch";
-      url = "https://github.com/xianyi/OpenBLAS/commit/6fe0f1fab9d6a7f46d71d37ebb210fbf56924fbc.diff";
-      sha256 = "06gwh73k4sas1ap2fi3jvpifbjkys2vhmnbj4mzrsvj279ljsfdk";
-    })
+    ./0001-Fix-ppc64le-build.patch
   ];
 
   inherit blas64;
