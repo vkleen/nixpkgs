@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchurl, version, hashes }:
+{ lib, stdenv, fetchurl, version, hashes, requireFile }:
 let
   toGoKernel = platform:
     if platform.isDarwin then "darwin"
@@ -11,6 +11,7 @@ let
     "armv6l" = "armv6l";
     "armv7l" = "armv6l";
     "powerpc64le" = "ppc64le";
+    "riscv64" = "riscv64";
   }.${platform.parsed.cpu.name} or (throw "Unsupported CPU ${platform.parsed.cpu.name}");
 
   toGoPlatform = platform: "${toGoKernel platform}-${toGoCPU platform}";
@@ -20,10 +21,17 @@ in
 stdenv.mkDerivation rec {
   name = "go-${version}-${platform}-bootstrap";
 
-  src = fetchurl {
-    url = "https://golang.org/dl/go${version}.${platform}.tar.gz";
-    sha256 = hashes.${platform} or (throw "Missing Go bootstrap hash for platform ${platform}");
-  };
+  src = {
+    "riscv64" = requireFile rec {
+      name = "go-linux-riscv64-bootstrap.tbz";
+      url = "file://path/to/${name}";
+      sha256 = "sha256-V+5da8rNDhmQKLsgYy4lXVQb0P8jbyzskemwqD+YA+o=";
+    };
+  }."${stdenv.hostPlatform.parsed.cpu.name}" or
+    (fetchurl {
+      url = "https://golang.org/dl/go${version}.${platform}.tar.gz";
+      sha256 = hashes.${platform} or (throw "Missing Go bootstrap hash for platform ${platform}");
+    });
 
   # We must preserve the signature on Darwin
   dontStrip = stdenv.hostPlatform.isDarwin;
