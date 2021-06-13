@@ -46,6 +46,7 @@ let
     libXrandr
     libXxf86vm
     libxcb
+    stdenv.cc.cc.lib
   ] ++ lib.optionals stdenv.isLinux [
     libxkbcommon
     wayland
@@ -56,13 +57,13 @@ rustPlatform.buildRustPackage rec {
   version = "0.8.0";
 
   src = fetchFromGitHub {
-    owner = "alacritty";
+    owner = "zenixls2";
     repo = pname;
-    rev = "v${version}";
-    sha256 = "sha256-9pQqnsLMkzhKTs7WGhf6lac/LGot6EmJQxgFBTrHA4E=";
+    rev = "3ed043046fc74f288d4c8fa7e4463dc201213500";
+    sha256 = "sha256-1dGk4ORzMSUQhuKSt5Yo7rOJCJ5/folwPX2tLiu0suA=";
   };
 
-  cargoSha256 = "sha256-NtDeXS2g+5RzKHJdDrbzL5oReS42SzuEubkfZ4gbkFc=";
+  cargoSha256 = "sha256-ttnwv8msnGMrC+s/RPK3oXe4u7rxa5m56iDfvCYnCio=";
 
   nativeBuildInputs = [
     cmake
