@@ -6,13 +6,13 @@
 mkDerivation rec {
   pname = "dsview";
 
-  version = "1.12";
+  version = "master";
 
   src = fetchFromGitHub {
       owner = "DreamSourceLab";
       repo = "DSView";
-      rev = "v${version}";
-      sha256 = "q7F4FuK/moKkouXTNPZDVon/W/ZmgtNHJka4MiTxA0U=";
+      rev = "2852876e988c8f8764406ff5789bb9d493c095f7";
+      sha256 = "sha256-JJWwf6IdT3TqUjSrrncF4GkK4GpApZojR3KKGh4+F90=";
   };
 
   sourceRoot = "source/DSView";
@@ -24,18 +24,18 @@ mkDerivation rec {
     # Fix buld with Qt5.15 already merged upstream for future release
     # Using local file instead of content of commit #33e3d896a47 because
     # sourceRoot make it unappliable
-    ./qt515.patch
+    # ./qt515.patch
 
     # Change from upstream master that removes extern-C scopes which
     # cause failures with modern glib. This can likely be removed if
     # there is an upstream release >1.12
-    (fetchpatch {
-      name = "fix-extern-c.patch";
-      url = "https://github.com/DreamSourceLab/DSView/commit/33cc733abe19872bf5ed08540a94b798d0d4ecf4.patch";
-      sha256 = "sha256-TLfLQa3sdyNHTpMMvId/V6uUuOFihOZMFJOj9frnDoY=";
-      stripLen = 2;
-      extraPrefix = "";
-    })
+    # (fetchpatch {
+    #   name = "fix-extern-c.patch";
+    #   url = "https://github.com/DreamSourceLab/DSView/commit/33cc733abe19872bf5ed08540a94b798d0d4ecf4.patch";
+    #   sha256 = "sha256-TLfLQa3sdyNHTpMMvId/V6uUuOFihOZMFJOj9frnDoY=";
+    #   stripLen = 2;
+    #   extraPrefix = "";
+    # })
   ];
 
   nativeBuildInputs = [ cmake pkg-config ];
