@@ -1,10 +1,11 @@
 { lib
 , buildPythonPackage
-, fetchPypi
+, fetchFromGitHub
 , isPy3k
 , beautifulsoup4
 , bottle
 , chardet
+, click
 , dateutil
 , google-api-python-client
 , google-auth-oauthlib
@@ -17,14 +18,16 @@
 }:
 
 buildPythonPackage rec {
-  version = "2.3.4";
+  version = "2021-06-30";
   pname = "beancount";
 
   disabled = !isPy3k;
 
-  src = fetchPypi {
-    inherit pname version;
-    sha256 = "sha256-K/CM5qldmAAPTXM5WYXNHeuBwNUu1aduYQusd9gvhsA=";
+  src = fetchFromGitHub {
+    owner = "beancount";
+    repo = "beancount";
+    rev = "4a489c69a5a751a73151fb8d121d31f8b5f74f6f";
+    sha256 = "sha256-w8KPd5dZWd68MTxmb8XwUSoXyU8DPjWt0Yv/NCRPxL4=";
   };
 
   # Tests require files not included in the PyPI archive.
@@ -34,6 +37,7 @@ buildPythonPackage rec {
     beautifulsoup4
     bottle
     chardet
+    click
     dateutil
     google-api-python-client
     google-auth-oauthlib
