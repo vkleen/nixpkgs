@@ -109,6 +109,8 @@ in {
         # Musl bindists do not exist for ghc 8.6.5, so we use 8.10.* for them
         else if stdenv.hostPlatform.isMusl then
           packages.ghc8102Binary
+        else if stdenv.isPower9 then
+          packages.ghc8107BinaryMinimal
         else
           packages.ghc865Binary;
       inherit (buildPackages.python3Packages) sphinx;
@@ -121,11 +123,8 @@ in {
         # aarch64 ghc865Binary gets SEGVs due to haskell#15449 or similar
         # the oldest ghc with aarch64-darwin support is 8.10.5
         # Musl bindists do not exist for ghc 8.6.5, so we use 8.10.* for them
-        if stdenv.hostPlatform.isAarch then
+        if stdenv.hostPlatform.isAarch || stdenv.isPower9 then
           packages.ghc8107BinaryMinimal
-        else if stdenv.hostPlatform.isPower64 && stdenv.hostPlatform.isLittleEndian then
-          # to my (@a-m-joseph) knowledge there are no newer official binaries for this platform
-          packages.ghc865Binary
         else
           packages.ghc8107Binary;
       inherit (buildPackages.python3Packages) sphinx;

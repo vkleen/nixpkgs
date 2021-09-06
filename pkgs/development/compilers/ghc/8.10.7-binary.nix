@@ -120,6 +120,18 @@ let
           { nixPackage = libiconv; fileToCheckFor = null; }
         ];
       };
+      powerpc64le-linux = {
+        variantSuffix = "";
+        src = {
+          url = "http://ppc64le-ghc8107.s3-website.eu-central-1.amazonaws.com/ghc-8.10.7-powerpc64le-unknown-linux.tar.xz";
+          sha256 = "1gc9qnd8cywb6s0j8i8b9h4imzf4ry8pgkqahs9p4bl6drv0ylqy";
+        };
+        exePathForLibraryCheck = "ghc/stage2/build/tmp/ghc-stage2";
+        archSpecificLibraries = [
+          { nixPackage = ncurses6; fileToCheckFor = null; }
+          { nixPackage = numactl; fileToCheckFor = null; }
+        ];
+      };
     };
     # Binary distributions for the musl libc for the respective system.
     musl = {
