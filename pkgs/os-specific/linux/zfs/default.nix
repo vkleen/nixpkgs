@@ -240,5 +240,7 @@ in {
     sha256 = "sha256-vLm6RE11nqOCoYXne79JU3nUQnVEUNbwrULwFfghWcI=";
 
     isUnstable = true;
+
+    extraPatches = [ ./zfs-license.patch ];
   };
 }
