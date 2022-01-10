@@ -58,20 +58,23 @@ in {
         CONFIG_FILE = finalConfigFile;
       };
 
+      script = ''
+        ${lib.optionalString (cfg.secretFile != null) ''
+          umask 077
+          export $(xargs < "''${CREDENTIALS_DIRECTORY}"/secretFile)
+          ${pkgs.envsubst}/bin/envsubst -i "${configFile}" > ${finalConfigFile}
+        ''}
+        exec ${pkgs.go-neb}/bin/go-neb
+      '';
       serviceConfig = {
-        ExecStartPre = lib.optional (cfg.secretFile != null)
-          (pkgs.writeShellScript "pre-start" ''
-            umask 077
-            export $(xargs < ${cfg.secretFile})
-            ${pkgs.envsubst}/bin/envsubst -i "${configFile}" > ${finalConfigFile}
-            chown go-neb ${finalConfigFile}
-          '');
-        PermissionsStartOnly = true;
         RuntimeDirectory = "go-neb";
-        ExecStart = "${pkgs.go-neb}/bin/go-neb";
         User = "go-neb";
         DynamicUser = true;
-      };
+      } // (lib.optionalAttrs (cfg.secretFile != null) {
+        LoadCredential = [
+          "secretFile:${cfg.secretFile}"
+        ];
+      });
     };
   };
 
