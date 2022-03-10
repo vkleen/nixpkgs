@@ -30,6 +30,7 @@ buildPythonPackage rec {
   ];
 
   checkInputs = [ pytestCheckHook ];
+  doCheck = false;
 
   meta = {
     description = "Run tests in isolated forked subprocesses";
