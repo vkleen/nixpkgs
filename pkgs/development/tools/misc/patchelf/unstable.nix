@@ -1,21 +1,16 @@
-{ lib, stdenv, fetchurl, autoreconfHook, fetchFromGitHub, unstableGitUpdater }:
+{ lib, stdenv, fetchurl, autoreconfHook, fetchFromSourcehut, unstableGitUpdater }:
 
 stdenv.mkDerivation rec {
   pname = "patchelf";
-  version = "unstable-2022-10-26";
+  version = "unstable-vkleen";
 
-  src = fetchFromGitHub {
-    owner = "NixOS";
+  src = fetchFromSourcehut {
+    owner = "~vkleen";
     repo = "patchelf";
-    rev = "af77f12554be9cc4b9e8b639df26f2659dd30500";
-    sha256 = "sha256-ajMOC1wyTVUOvP0rOt/uO6+1+S4bIAc1jWQ8Uwbzrn8=";
+    domain = "sr.ht.kleen.org";
+    rev = "72f5529c3bc109204e0f250b1666afb9c8436f9f";
+    sha256 = "sha256-lhvkU32OnmeKQ74hsCHlPd5SnJAgv9j6hWujS8Q3plU=";
   };
-
-  # Drop test that fails on musl (?)
-  postPatch = lib.optionalString stdenv.hostPlatform.isMusl ''
-    substituteInPlace tests/Makefile.am \
-      --replace "set-rpath-library.sh" ""
-  '';
 
   setupHook = [ ./setup-hook.sh ];
 
@@ -26,7 +21,7 @@ stdenv.mkDerivation rec {
 
   passthru = {
     updateScript = unstableGitUpdater {
-      url = "https://github.com/NixOS/patchelf.git";
+      url = "https://git.sr.ht.kleen.org/~vkleen/patchelf";
     };
   };
 
