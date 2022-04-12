@@ -5,6 +5,7 @@
 , llvmPackages
 , coreutils
 , targetPackages
+, patchelfUnstable
 
   # minimal = true; will remove files that aren't strictly necessary for
   # regular builds and GHC bootstrapping.
@@ -201,7 +202,7 @@ stdenv.mkDerivation rec {
   #           https://gitlab.haskell.org/ghc/ghc/-/issues/20059
   #       and update this comment accordingly.
 
-  nativeBuildInputs = [ perl ];
+  nativeBuildInputs = [ perl patchelfUnstable ];
 
   # Set LD_LIBRARY_PATH or equivalent so that the programs running as part
   # of the bindist installer can find the libraries they expect.
