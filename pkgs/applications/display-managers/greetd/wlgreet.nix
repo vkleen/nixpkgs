@@ -1,6 +1,8 @@
 { lib
 , rustPlatform
 , fetchFromSourcehut
+, libxkbcommon
+, wayland
 }:
 
 rustPlatform.buildRustPackage rec {
@@ -15,6 +17,11 @@ rustPlatform.buildRustPackage rec {
   };
 
   cargoHash = "sha256-1ugExUtrzqyd9dTlBHcc44UrtEfYrfUryuG79IkTv2Y=";
+
+  postFixup = ''
+    patchelf --add-rpath ${lib.makeLibraryPath [ libxkbcommon wayland ]} \
+      $out/bin/wlgreet
+  '';
 
   meta = with lib; {
     description = "Raw wayland greeter for greetd, to be run under sway or similar";
