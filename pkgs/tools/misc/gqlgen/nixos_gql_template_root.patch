@@ -1,0 +1,15 @@
+diff --git a/codegen/templates/templates.go b/codegen/templates/templates.go
+index 0ea3c872..48632942 100644
+--- a/codegen/templates/templates.go
++++ b/codegen/templates/templates.go
+@@ -66,6 +66,10 @@ func Render(cfg Options) error {
+ 	// load path relative to calling source file
+ 	_, callerFile, _, _ := runtime.Caller(1)
+ 	rootDir := filepath.Dir(callerFile)
++  if nixSrcRootDir := os.Getenv("NIX_GQL_TEMPLATE_ROOT"); nixSrcRootDir != "" {
++    rel,_ := filepath.Rel("/build/source/", rootDir)
++    rootDir = filepath.Join(nixSrcRootDir, rel);
++  }
+ 
+ 	funcs := Funcs()
+ 	for n, f := range cfg.Funcs {
