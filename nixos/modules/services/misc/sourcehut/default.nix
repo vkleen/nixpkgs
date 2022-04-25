@@ -825,12 +825,14 @@ in
               "${pkgs.writeShellScript "gitsrht-keys-wrapper" ''
                 set -e
                 cd /run/sourcehut/gitsrht/subdir
+                export SRHT_CONFIG=/run/sourcehut/gitsrht/config.ini
                 set -x
                 exec -a "$0" ${pkgs.sourcehut.gitsrht}/bin/gitsrht-keys "$@"
               ''}:/usr/bin/gitsrht-keys"
               "${pkgs.writeShellScript "gitsrht-shell-wrapper" ''
                 set -e
                 cd /run/sourcehut/gitsrht/subdir
+                export SRHT_CONFIG=/run/sourcehut/gitsrht/config.ini
                 set -x
                 exec -a "$0" ${pkgs.sourcehut.gitsrht}/bin/gitsrht-shell "$@"
               ''}:/usr/bin/gitsrht-shell"
