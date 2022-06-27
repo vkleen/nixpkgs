@@ -26,6 +26,7 @@
 , withI18n ? true
 , withPCM ? true # Plugin and Content Manager
 , doCheck ? true
+, withSpnav ? stdenv.isLinux
 , srcs ? { }
 }:
 
@@ -119,7 +120,7 @@ stdenv.mkDerivation rec {
     inherit stable baseName;
     inherit kicadSrc kicadVersion;
     inherit wxGTK python wxPython;
-    inherit withOCC withNgspice withScripting withI18n withPCM;
+    inherit withOCC withNgspice withScripting withI18n withPCM withSpnav;
     inherit debug sanitizeAddress sanitizeThreads;
     inherit doCheck;
   };
