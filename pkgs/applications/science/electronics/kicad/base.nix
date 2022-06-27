@@ -41,6 +41,7 @@
 , opencascade-occt
 , libngspice
 , valgrind
+, libspnav
 
 , stable
 , baseName
@@ -51,6 +52,7 @@
 , withScripting
 , withI18n
 , withPCM
+, withSpnav
 , debug
 , sanitizeAddress
 , sanitizeThreads
@@ -125,6 +127,10 @@ stdenv.mkDerivation rec {
   ]
   ++ optionals (!stable) [ # upstream issue 12491
     "-DCMAKE_CTEST_ARGUMENTS='--exclude-regex;qa_eeschema'"
+  ]
+  ++ optionals (withSpnav) [
+    "-DKICAD_USE_3DCONNEXION=ON"
+    "-DKICAD_3DCONNEXION_LIBSPNAV=ON"
   ];
 
   nativeBuildInputs = [
@@ -174,7 +180,9 @@ stdenv.mkDerivation rec {
   ++ optional (withScripting) wxPython
   ++ optional (withNgspice) libngspice
   ++ optional (withOCC) opencascade-occt
-  ++ optional (debug) valgrind;
+  ++ optional (debug) valgrind
+  ++ optional (withSpnav) libspnav
+  ;
 
   doInstallCheck = doCheck;
   installCheckTarget = "test";
