@@ -40,6 +40,7 @@
 , opencascade-occt
 , libngspice
 , valgrind
+, libspnav
 
 , stable
 , baseName
@@ -50,6 +51,7 @@
 , withScripting
 , withI18n
 , withPCM
+, withSpnav
 , debug
 , sanitizeAddress
 , sanitizeThreads
@@ -116,6 +118,10 @@ stdenv.mkDerivation rec {
   ]
   ++ optionals (!withPCM && stable) [
     "-DKICAD_PCM=OFF"
+  ]
+  ++ optionals (withSpnav) [
+    "-DKICAD_USE_3DCONNEXION=ON"
+    "-DKICAD_3DCONNEXION_LIBSPNAV=ON"
   ];
 
   nativeBuildInputs = [
@@ -165,6 +171,7 @@ stdenv.mkDerivation rec {
   ++ optional (withNgspice) libngspice
   ++ optional (withOCC) opencascade-occt
   ++ optional (debug) valgrind
+  ++ optional (withSpnav) libspnav
   ;
 
   # started becoming necessary halfway into 2022, not sure what changed to break a test...
