@@ -4,6 +4,7 @@
 , dconf
 , wxGTK32
 , gtk3
+, wxPython ? null
 , makeWrapper
 , gsettings-desktop-schemas
 , hicolor-icon-theme
@@ -63,8 +64,9 @@
 #     };
 #   });
 # }
-
 let
+  wxPython_ = wxPython;
+in let
   baseName = if (stable) then "kicad" else "kicad-unstable";
   versionsImport = import ./versions.nix;
 
@@ -108,7 +110,9 @@ let
 
   wxGTK = wxGTK32;
   python = python3;
-  wxPython = python.pkgs.wxPython_4_2;
+  wxPython = if wxPython_ == null
+    then python.pkgs.wxPython_4_2
+    else wxPython_;
 
   inherit (lib) concatStringsSep flatten optionalString optionals;
 in
