@@ -19,6 +19,7 @@
 , withNgspice ? true
 , libngspice
 , withScripting ? true
+, extraPythonPath ? []
 , python3
 , debug ? false
 , sanitizeAddress ? false
@@ -139,7 +140,7 @@ stdenv.mkDerivation rec {
   dontFixup = true;
 
   pythonPath = optionals (withScripting)
-    [ wxPython python.pkgs.six ];
+    ([ wxPython python.pkgs.six ] ++ extraPythonPath);
 
   nativeBuildInputs = [ makeWrapper ]
     ++ optionals (withScripting)
