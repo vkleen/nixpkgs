@@ -1,24 +1,18 @@
 { stdenv, lib, fetchFromGitHub, libX11, fixDarwinDylibNames }:
 
 stdenv.mkDerivation rec {
-  version = "0.2.3";
+  version = "master";
   pname = "libspnav";
 
   src = fetchFromGitHub {
     owner = "FreeSpacenav";
     repo = "libspnav";
-    rev = "${pname}-${version}";
-    sha256 = "098h1jhlj87axpza5zgy58prp0zn94wyrbch6x0s7q4mzh7dc8ba";
+    rev = "1716ccf15fa59a3acaeb9805262fc23613fd6a40";
+    sha256 = "qBewSOiwf5iaGKLGRWOQUoHkUADuH8Q1mJCLiWCXmuQ=";
   };
 
   nativeBuildInputs = lib.optional stdenv.isDarwin fixDarwinDylibNames;
   buildInputs = [ libX11 ];
-
-  patches = [
-    # Changes the socket path from /run/spnav.sock to $XDG_RUNTIME_DIR/spnav.sock
-    # to allow for a user service
-    ./configure-socket-path.patch
-  ];
 
   configureFlags = [ "--disable-debug"];
   makeFlags = [
