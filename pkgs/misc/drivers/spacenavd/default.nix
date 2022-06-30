@@ -1,32 +1,15 @@
 { stdenv, lib, fetchFromGitHub, fetchpatch, libX11, IOKit }:
 
 stdenv.mkDerivation rec {
-  version = "0.8";
+  version = "master";
   pname = "spacenavd";
 
   src = fetchFromGitHub {
-    owner = "FreeSpacenav";
+    owner = "vkleen";
     repo = "spacenavd";
-    rev = "v${version}";
-    sha256 = "1zz0cm5cgvp9s5n4nzksl8rb11c7sw214bdafzra74smvqfjcjcf";
+    rev = "23c17bfd70db2a1f14a48c4ad25c63a81b6645f5";
+    sha256 = "sha256-Q2amZXPK+ygdqj9LKlhS+lMI6x4615CymNbjTBFO+gY=";
   };
-
-  patches = [
-    # Fixes Darwin: https://github.com/FreeSpacenav/spacenavd/pull/38
-    (fetchpatch {
-      url = "https://github.com/FreeSpacenav/spacenavd/commit/d6a25d5c3f49b9676d039775efc8bf854737c43c.patch";
-      sha256 = "02pdgcvaqc20qf9hi3r73nb9ds7yk2ps9nnxaj0x9p50xjnhfg5c";
-    })
-    # Changes the socket path from /run/spnav.sock to $XDG_RUNTIME_DIR/spnav.sock
-    # to allow for a user service
-    ./configure-socket-path.patch
-    # Changes the pidfile path from /run/spnavd.pid to $XDG_RUNTIME_DIR/spnavd.pid
-    # to allow for a user service
-    ./configure-pidfile-path.patch
-    # Changes the config file path from /etc/spnavrc to $XDG_CONFIG_HOME/spnavrc or $HOME/.config/spnavrc
-    # to allow for a user service
-    ./configure-cfgfile-path.patch
-  ];
 
   buildInputs = [ libX11 ]
     ++ lib.optional stdenv.isDarwin IOKit;
