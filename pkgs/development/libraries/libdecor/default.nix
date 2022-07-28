@@ -45,6 +45,10 @@ stdenv.mkDerivation rec {
     libxkbcommon
   ];
 
+  mesonFlags = [
+    "-Ddemo=false"
+  ];
+
   meta = with lib; {
     homepage = "https://gitlab.gnome.org/jadahl/libdecor";
     description = "Client-side decorations library for Wayland clients";
