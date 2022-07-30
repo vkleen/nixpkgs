@@ -214,7 +214,6 @@ in
       description = "Paperless scheduler";
       serviceConfig = defaultServiceConfig // {
         User = cfg.user;
-        ExecStart = "${pkg}/bin/paperless-ngx qcluster";
         Restart = "on-failure";
         # The `mbind` syscall is needed for running the classifier.
         SystemCallFilter = defaultServiceConfig.SystemCallFilter ++ [ "mbind" ];
@@ -224,6 +223,8 @@ in
       environment = env;
       wantedBy = [ "multi-user.target" ];
       wants = [ "paperless-consumer.service" "paperless-web.service" ];
+
+      script = "${pkg}/bin/paperless-ngx qcluster";
 
       preStart = ''
         ln -sf ${manage} ${cfg.dataDir}/paperless-manage
@@ -255,22 +256,22 @@ in
       requiredBy = [ "paperless-scheduler.service" ];
       before = [ "paperless-scheduler.service" ];
       serviceConfig = {
-        ExecStart = ''
-          ${pkgs.coreutils}/bin/install --mode 600 --owner '${cfg.user}' --compare \
-            '${cfg.passwordFile}' '${cfg.dataDir}/superuser-password'
-        '';
         Type = "oneshot";
       };
+      script = ''
+        ${pkgs.coreutils}/bin/install --mode 600 --owner '${cfg.user}' --compare \
+          '${cfg.passwordFile}' '${cfg.dataDir}/superuser-password'
+      '';
     };
 
     systemd.services.paperless-consumer = {
       description = "Paperless document consumer";
       serviceConfig = defaultServiceConfig // {
         User = cfg.user;
-        ExecStart = "${pkg}/bin/paperless-ngx document_consumer";
         Restart = "on-failure";
       };
       environment = env;
+      script = "${pkg}/bin/paperless-ngx document_consumer";
       # Bind to `paperless-scheduler` so that the consumer never runs
       # during migrations
       bindsTo = [ "paperless-scheduler.service" ];
@@ -281,10 +282,6 @@ in
       description = "Paperless web server";
       serviceConfig = defaultServiceConfig // {
         User = cfg.user;
-        ExecStart = ''
-          ${pkg.python.pkgs.gunicorn}/bin/gunicorn \
-            -c ${pkg}/lib/paperless-ngx/gunicorn.conf.py paperless.asgi:application
-        '';
         Restart = "on-failure";
 
         # gunicorn needs setuid, liblapack needs mbind
@@ -299,6 +296,10 @@ in
         PATH = mkForce pkg.path;
         PYTHONPATH = "${pkg.python.pkgs.makePythonPath pkg.propagatedBuildInputs}:${pkg}/lib/paperless-ngx/src";
       };
+      script = ''
+        ${pkgs.python3Packages.gunicorn}/bin/gunicorn \
+          -c ${pkg}/lib/paperless-ngx/gunicorn.conf.py paperless.asgi:application
+      '';
       # Allow the web interface to access the private /tmp directory of the server.
       # This is required to support uploading files via the web interface.
       unitConfig.JoinsNamespaceOf = "paperless-scheduler.service";
