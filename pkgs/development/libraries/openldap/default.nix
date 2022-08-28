@@ -96,7 +96,7 @@ stdenv.mkDerivation rec {
       --replace "/bin/rm" "rm"
   '';
 
-  doCheck = true;
+  doCheck = !stdenv.isPower9;
 
   # The directory is empty and serve no purpose.
   preFixup = ''
