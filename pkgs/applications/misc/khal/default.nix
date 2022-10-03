@@ -83,7 +83,7 @@ python3.pkgs.buildPythonApplication rec {
     install -Dm755 misc/khal.desktop -t $out/share/applications
   '';
 
-  doCheck = !stdenv.isAarch64;
+  doCheck = false;
 
   LC_ALL = "en_US.UTF-8";
 
