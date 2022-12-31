@@ -47,6 +47,7 @@ let
     "mikrotik"
     "minio"
     "modemmanager"
+    "mqtt2prometheus"
     "nextcloud"
     "nginx"
     "nginxlog"
