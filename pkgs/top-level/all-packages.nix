@@ -21827,6 +21827,8 @@ with pkgs;
 
   mpeg2dec = libmpeg2;
 
+  mqtt2prometheus = callPackage ../servers/monitoring/prometheus/mqtt2prometheus.nix { };
+
   mqttui = callPackage ../tools/networking/mqttui {
     inherit (darwin.apple_sdk.frameworks) Security;
   };

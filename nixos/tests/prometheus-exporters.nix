@@ -674,6 +674,53 @@ let
       '';
     };
 
+    mqtt2prometheus = {
+      exporterConfig = {
+        enable = true;
+        mqttUser = "root";
+        mqttPasswordFile = pkgs.writeText "password-file" "password";
+        settings = {
+          mqtt = {
+            server = "tcp://127.0.0.1:1883";
+            topic_path = "test/+";
+          };
+          metrics = [{
+            prom_name = "test_metric";
+            mqtt_name = "metric";
+            help = "Test metric";
+            type = "gauge";
+            const_labels = {
+              sensor_type = "test";
+            };
+          }];
+        };
+      };
+      metricProvider = {
+        environment.systemPackages = [ pkgs.mosquitto ];
+        services.mosquitto = {
+          enable = true;
+          listeners = [{
+            users = {
+              root = {
+                acl = [ "readwrite #" ];
+                password = "password";
+              };
+            };
+            settings.allow_anonymous = false;
+          }];
+        };
+      };
+      exporterTest = ''
+        wait_for_unit("mosquitto.service")
+        wait_for_unit("prometheus-mqtt2prometheus-exporter.service")
+        wait_for_open_port(9641)
+        succeed("mosquitto_pub -u root --pw password -t 'test/test_device' -m '{\"metric\":25}'")
+        succeed(
+          "curl localhost:9641/metrics | grep test_metric"
+        )
+      '';
+    };
+
     nextcloud = {
       exporterConfig = {
         enable = true;
