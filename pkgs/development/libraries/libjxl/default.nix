@@ -110,7 +110,7 @@ stdenv.mkDerivation rec {
 
   # FIXME x86_64-darwin:
   # https://github.com/NixOS/nixpkgs/pull/204030#issuecomment-1352768690
-  doCheck = with stdenv; !(hostPlatform.isi686 || isDarwin && isx86_64);
+  doCheck = with stdenv; !(hostPlatform.isi686 || (isDarwin && isx86_64) || hostPlatform.isPower9);
 
   meta = with lib; {
     homepage = "https://github.com/libjxl/libjxl";
