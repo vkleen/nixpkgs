@@ -68,6 +68,10 @@ self: super: {
     Cabal-syntax = self.Cabal-syntax_3_8_1_0;
   };
 
+  fourmolu = super.fourmolu.override {
+    Cabal-syntax = self.Cabal-syntax_3_8_1_0;
+  };
+
   ormolu = self.ormolu_0_5_2_0.override {
     Cabal-syntax = self.Cabal-syntax_3_8_1_0;
   };
@@ -119,8 +123,8 @@ self: super: {
 
   # https://github.com/fpco/inline-c/pull/131
   inline-c-cpp =
-    (if isDarwin then appendConfigureFlags ["--ghc-option=-fcompact-unwind"] else x: x)
-    super.inline-c-cpp;
+    (if isDarwin then appendConfigureFlags [ "--ghc-option=-fcompact-unwind" ] else x: x)
+      super.inline-c-cpp;
 
   # A given major version of ghc-exactprint only supports one version of GHC.
   ghc-exactprint = super.ghc-exactprint_1_5_0;
